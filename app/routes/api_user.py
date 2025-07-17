@@ -6,17 +6,25 @@ from app.utils.qrcode_utils import generate_qr_code
 from datetime import datetime
 import os
 
+# Blueprint pour les routes utilisateur (destinations, tickets, validation)
 api_user_bp = Blueprint('api_user_bp', __name__)
 
 @api_user_bp.route('/destinations', methods=['GET'])
 @jwt_required()
 def get_destinations():
+    """
+    Retourne la liste des destinations disponibles.
+    Accessible uniquement avec un JWT valide.
+    """
     destinations = Destination.query.all()
     return jsonify([{'id': d.id, 'depart': d.depart, 'arrivee': d.arrivee, 'compagnie': d.compagnie, 'prix': d.prix} for d in destinations])
 
 @api_user_bp.route('/tickets', methods=['GET'])
 @jwt_required()
 def get_tickets():
+    """
+    Retourne la liste des tickets de l'utilisateur connecté.
+    """
     user_id = get_jwt_identity()['id']
     tickets = Ticket.query.filter_by(user_id=user_id).all()
     return jsonify([
@@ -37,6 +45,10 @@ def get_tickets():
 @api_user_bp.route('/tickets', methods=['POST'])
 @jwt_required()
 def add_ticket():
+    """
+    Ajoute un ticket pour l'utilisateur connecté.
+    Attend un JSON avec : destination_id, date_voyage (YYYY-MM-DD).
+    """
     user_id = get_jwt_identity()['id']
     data = request.get_json()
     destination_id = data.get('destination_id')
@@ -53,6 +65,9 @@ def add_ticket():
 @api_user_bp.route('/tickets/<int:ticket_id>/validate', methods=['POST'])
 @jwt_required()
 def validate_ticket(ticket_id):
+    """
+    Valide un ticket pour l'utilisateur connecté.
+    """
     user_id = get_jwt_identity()['id']
     ticket = Ticket.query.filter_by(id=ticket_id, user_id=user_id).first()
     if not ticket:

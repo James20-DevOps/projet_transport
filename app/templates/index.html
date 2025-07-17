@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Liste des routes de l'application</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/modern-normalize/2.0.0/modern-normalize.min.css">
+    <style>
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background: #f4f6fa;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 900px;
+            margin: 40px auto;
+            background: #fff;
+            border-radius: 12px;
+            box-shadow: 0 2px 16px rgba(0,0,0,0.07);
+            padding: 32px 24px 24px 24px;
+        }
+        h1 {
+            text-align: center;
+            color: #2d3a4b;
+            margin-bottom: 32px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 16px;
+        }
+        th, td {
+            padding: 14px 10px;
+            text-align: left;
+        }
+        th {
+            background: #2d3a4b;
+            color: #fff;
+            font-weight: 600;
+        }
+        tr:nth-child(even) {
+            background: #f0f3f7;
+        }
+        tr:hover {
+            background: #e6eaf1;
+        }
+        .endpoint {
+            font-family: monospace;
+            color: #1a5dab;
+        }
+        .methods {
+            font-size: 0.98em;
+            font-weight: 500;
+        }
+        @media (max-width: 600px) {
+            .container { padding: 10px; }
+            th, td { padding: 8px 4px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Liste des routes de l'application</h1>
+        <table>
+            <thead>
+                <tr>
+                    <th>URL</th>
+                    <th>Méthodes</th>
+                    <th>Endpoint</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for route in routes %}
+                <tr>
+                    <td class="endpoint">{{ route.rule }}</td>
+                    <td class="methods">{{ route.methods }}</td>
+                    <td>{{ route.endpoint }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <p style="text-align:center;color:#888;margin-top:24px;font-size:0.97em;">Généré automatiquement pour faciliter le développement mobile.</p>
+    </div>
+</body>
+</html>

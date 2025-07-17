@@ -5,14 +5,22 @@ from app import db, login_manager, bcrypt
 from datetime import datetime
 import os
 
+# Blueprint pour les routes d'administration web (login, dashboard, gestion, scan, logout)
 web_admin_bp = Blueprint('web_admin_bp', __name__, template_folder='../templates/admin')
 
 @login_manager.user_loader
 def load_user(user_id):
+    """
+    Fonction de chargement d'utilisateur pour Flask-Login.
+    """
     return User.query.get(int(user_id))
 
 @web_admin_bp.route('/login', methods=['GET', 'POST'])
 def admin_login():
+    """
+    Page de connexion pour les administrateurs.
+    Vérifie le rôle et connecte l'admin si les identifiants sont valides.
+    """
     if request.method == 'POST':
         email = request.form['email']
         password = request.form['password']
@@ -26,6 +34,9 @@ def admin_login():
 @web_admin_bp.route('/dashboard')
 @login_required
 def dashboard():
+    """
+    Tableau de bord de l'admin (accès restreint).
+    """
     if current_user.role != 'admin':
         return redirect(url_for('web_admin_bp.admin_login'))
     return render_template('dashboard.html')
@@ -33,6 +44,9 @@ def dashboard():
 @web_admin_bp.route('/users')
 @login_required
 def users():
+    """
+    Liste des utilisateurs (accès admin uniquement).
+    """
     if current_user.role != 'admin':
         return redirect(url_for('web_admin_bp.admin_login'))
     users = User.query.all()
@@ -41,6 +55,9 @@ def users():
 @web_admin_bp.route('/destinations', methods=['GET', 'POST'])
 @login_required
 def destinations():
+    """
+    Gestion des destinations (ajout, affichage) pour l'admin.
+    """
     if current_user.role != 'admin':
         return redirect(url_for('web_admin_bp.admin_login'))
     if request.method == 'POST':
@@ -58,6 +75,9 @@ def destinations():
 @web_admin_bp.route('/scan', methods=['GET', 'POST'])
 @login_required
 def scan():
+    """
+    Page de scan des tickets (QR code) pour l'admin.
+    """
     if current_user.role != 'admin':
         return redirect(url_for('web_admin_bp.admin_login'))
     result = None
